@@ -31,6 +31,7 @@ class repodepot():
 	videofiletypes = ['avi','mp4']
 	archivestor = ['music','video','image','docs']
 	storsubs = archivestor + ['archive']
+	mntdrv = userdir+orgitbin
 
 		
 class setupEnv(repodepot):
@@ -59,6 +60,18 @@ class depotcrtl(repodepot):
 	def __init__(self, startdir):
 		self.startdir = startdir
 		self.startingdir = os.getcwd()
+	def encmountctrl(self,action):
+		if action == 'mount':
+			print "mounting Drive"
+			cmd = '/mnt'
+		elif action == 'umount':
+			print "Unmounting Drive"
+			cmd = '/umnt'
+		else:
+			return False
+		fullcmd = self.mntdrv+cmd
+		if os.path.exists(fullcmd):
+			return subprocess.check_call([fullcmd]	
 	def jchown(self, path, uid, gid):
 			os.chown(path, uid, gid)
 			for item in os.listdir(path):
@@ -93,8 +106,7 @@ class depotcrtl(repodepot):
 			sys.exit(1)
 		if not os.path.exists(self.repodir):
 			# I could put a mount specific store per thingy
-			print "mounting drive"
-			subprocess.check_call([self.userdir+self.orgitbin+'/mnt'])
+			self.encmountctrl('mount')
 		if os.path.exists(research) and os.path.exists(self.repodir):
 			os.makedirs(remote)
 			os.chdir(remote)
@@ -110,8 +122,7 @@ class depotcrtl(repodepot):
 			self.jchown(newlocal,1000,1000)
 			shutil.rmtree(research)
 			print reponame,"Rsch repo deleted"
-			subprocess.check_call([self.userdir+self.orgitbin+'/umnt'])
-			print "Unmounting Drive"
+			self.encmountctrl('umount')
 		else:
 			print "Can't Promote, probly not mounted"
 			sys.exit(1)
@@ -143,23 +154,22 @@ class depotcrtl(repodepot):
 			sys.exit(1)
 		if not os.path.exists(self.repodir):
 			# I could put a mount specific store per thingy
-			print 'Mounting drive'
-			subprocess.check_call([orgitbin+'/mnt'])
-		for f in dirlist:
-			u = self.userdir+f
-			os.chdir(u)
-			dirs=[d for d in os.listdir(u) if os.path.isdir(d)]
-			for l in dirs:
-				w = u+"/"+l
-				os.chdir(w)
-				git("add", '.')
-				try:
-					git("commit", "-a")
-				except:
-					print "nothing to commit"
-				git("push","origin", "master")
-		subprocess.check_call([orgitbin+'/umnt'])
-		print "Unmounting Drive"
+			self.encmountctrl('mount')
+			for f in dirlist:
+				u = self.userdir+f
+				os.chdir(u)
+				dirs=[d for d in os.listdir(u) if os.path.isdir(d)]
+				for l in dirs:
+					w = u+"/"+l
+					os.chdir(w)
+					git("add", '.')
+					try:
+						git("commit", "-a")
+					except:
+						print "nothing to commit"
+					git("push","origin", "master")
+			self.encmountctrl('umount')
+		else
 		print "done"
 			
 import re
