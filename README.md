@@ -18,8 +18,7 @@ orgit <action> <item>
 
 Urban Dictionary: orgit
 
-www.urbandictionary.com/define.php?term=orgit
-Urban Dictionary
+The Urban Dictionary defines orgit as:
 orgit. n. A midget that has been dipped in a vat of fake tanning solution. Derived from the words orange midget. 
 
 "Orgits don't take up space in tanning salons ..."
