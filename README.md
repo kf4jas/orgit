@@ -16,9 +16,8 @@ sudo make install
 orgit <action> <item>
 ```
 
-Urban Dictionary: orgit
 
-The Urban Dictionary defines orgit as:
+The Urban Dictionary defines an orgit as:
 orgit. n. A midget that has been dipped in a vat of fake tanning solution. Derived from the words orange midget. 
 
 "Orgits don't take up space in tanning salons ..."
