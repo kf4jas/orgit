@@ -36,11 +36,7 @@ orgit. n. A midget that has been dipped in a vat of fake tanning solution. Deriv
 
 * setup
   - this allows you to either 
-  - `orgit setup install # for $USER directory`
-
-or 
-
-  - `orgit setup <pick userdir>`
+  - `orgit setup install # for $USER directory` or `orgit setup <pick userdir>`
 
 * backup <userdir>
   - `orgit backup <userdir>`

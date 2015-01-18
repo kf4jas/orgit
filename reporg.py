@@ -45,9 +45,10 @@ if args.action == 'setup':
 		setupe = repotdepot.setupEnv()
 		setupe.createALLDirs()
 	else:
-		udir = '/'+args.item
-		setupe = repotdepot.setupEnv(args.item)
-		setupe.createALLDirs()
+		print "So ... you need to use the 'orgit setup install' command"
+		#udir = '/'+args.item
+		#setupe = repotdepot.setupEnv(args.item)
+		#setupe.createALLDirs()
 
 ## Creates the repo in the rsch direcory
 elif args.action == 'create':

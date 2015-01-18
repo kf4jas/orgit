@@ -1,0 +1,42 @@
+#!/usr/bin/python 
+
+import argparse, pprint, os, sys
+
+parser = argparse.ArgumentParser(description='This is a demo script Joe. It grabs the weather for any location.')
+parser.add_argument('-u','--userdir', nargs=1, help='User Work Directory',required=False)
+parser.add_argument('-r','--repodir', nargs=1, help='Work Repos are mounted and stored here',required=False)
+parser.add_argument('-o','--orgitbin', nargs=1, help='Where the mount commands are',required=False)
+args = parser.parse_args()
+
+### check over the iterations of the namespace
+def uniqueconfig(s,o):
+	try:
+		if args.__dict__[s][0][::-1][0] == '/':
+			o = args.__dict__[s][0][:-1]
+		else:
+			o = args.__dict__[s][0]
+	except:
+		print s,"not in here"
+	return o+'/'
+
+## Defaults comapred to the install
+userdir = uniqueconfig('userdir',str(os.getenv("HOME")))
+
+## this is the either enc or non-encrypted mounnts are
+repodir = uniqueconfig('repodir','/mnt/repo')
+
+## and this is where the mnt and dismount commands are.
+orgitbin = uniqueconfig('orgitbin','/usr/local/bin')
+
+# Build the INI File 
+s = """[mainconfig]
+userdir = %s
+repodir = %s
+orgitbin = %s""" % (userdir,repodir,orgitbin)
+
+print "Creating Config.ini"
+print s
+f = open('config.ini','w')
+f.write(s)
+f.close()
+print "done, run 'orgit setup install' now"

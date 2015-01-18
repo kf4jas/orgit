@@ -17,21 +17,40 @@
 
 import os, sys, shutil
 import subprocess
+import ConfigParser
+import re
+
+def ConfigSectionMap(section):
+    dict1 = {}
+    options = Config.options(section)
+    for option in options:
+        try:
+            dict1[option] = Config.get(section, option)
+            if dict1[option] == -1:
+                DebugPrint("skip: %s" % option)
+        except:
+            print("exception on %s!" % option)
+            dict1[option] = None
+    return dict1
+
+Config = ConfigParser.ConfigParser()
+Config.read('/etc/orgit/config.ini')
 
 def git(*args):
     return subprocess.check_call(['git'] + list(args))
 
+
 class repodepot():
-	userdir = os.getenv("HOME")+'/'
-	repodir = '/mnt/repo/'
-	orgitbin = "binorg"
+	userdir = ConfigSectionMap('mainconfig')['userdir']
+	repodir = ConfigSectionMap('mainconfig')['repodir']
+	orgitbin = ConfigSectionMap('mainconfig')['orgitbin']
 	folders = ['rsch','local','work','fun','learn','stor']
 	musicfiletypes = ['mp3','wav','ogg']
 	imagefiletypes = ['png','jpg','jpeg','bmp','gif']
 	videofiletypes = ['avi','mp4']
 	archivestor = ['music','video','image','docs']
 	storsubs = archivestor + ['archive']
-	mntdrv = userdir+orgitbin
+	mntdrv
 
 		
 class setupEnv(repodepot):
@@ -51,7 +70,7 @@ class setupEnv(repodepot):
 			self.makeDir(basedir,f)
 			
 	def createALLDirs(self):
-		self.makeDir(self.userdir,self.orgitbin)
+		self.makeDir(self.orgitbin)
 		self.createDirs(self.folders)
 		self.createDirs(self.storsubs,'stor/')
 		self.createDirs(self.archivestor,'stor/archive/')
@@ -69,18 +88,19 @@ class depotcrtl(repodepot):
 			cmd = '/umnt'
 		else:
 			return False
-		fullcmd = self.mntdrv+cmd
+		fullcmd = self.orgitbin+cmd
 		if os.path.exists(fullcmd):
-			return subprocess.check_call([fullcmd]	
+			subprocess.check_call([fullcmd])
+			
 	def jchown(self, path, uid, gid):
-			os.chown(path, uid, gid)
-			for item in os.listdir(path):
-				itempath = os.path.join(path, item)
-				if os.path.isfile(itempath):
-					os.chown(itempath, uid, gid)
-				elif os.path.isdir(itempath):
-					os.chown(itempath, uid, gid)
-					self.jchown(itempath, uid, gid)
+		os.chown(path, uid, gid)
+		for item in os.listdir(path):
+			itempath = os.path.join(path, item)
+			if os.path.isfile(itempath):
+				os.chown(itempath, uid, gid)
+			elif os.path.isdir(itempath):
+				os.chown(itempath, uid, gid)
+				self.jchown(itempath, uid, gid)
 	def getuserdir(self):
 		return self.userdir
 		
@@ -169,10 +189,10 @@ class depotcrtl(repodepot):
 						print "nothing to commit"
 					git("push","origin", "master")
 			self.encmountctrl('umount')
-		else
-		print "done"
+		else:
+			print "done"
 			
-import re
+
 
 class searchrepos(repodepot):
 	def __init__(self,query):
