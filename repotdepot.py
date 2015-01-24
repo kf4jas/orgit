@@ -44,13 +44,13 @@ class repodepot():
 	userdir = ConfigSectionMap('mainconfig')['userdir']
 	repodir = ConfigSectionMap('mainconfig')['repodir']
 	orgitbin = ConfigSectionMap('mainconfig')['orgitbin']
+	#print orgitbin,repodir,userdir
 	folders = ['rsch','local','work','fun','learn','stor']
 	musicfiletypes = ['mp3','wav','ogg']
 	imagefiletypes = ['png','jpg','jpeg','bmp','gif']
 	videofiletypes = ['avi','mp4']
 	archivestor = ['music','video','image','docs']
 	storsubs = archivestor + ['archive']
-	mntdrv
 
 		
 class setupEnv(repodepot):
@@ -195,20 +195,22 @@ class depotcrtl(repodepot):
 
 
 class searchrepos(repodepot):
+
 	def __init__(self,query):
 		self.dirs = self.folders
-		self.currdir = ''
 		self.query = query
 		self.zresult = []
 		self.currd = ''
 		
 	def chunkthrough(self,dirlist):
 		if len(dirlist) == 0:
-			self.zresult
+			a=1
+			#self.zresult
 		else:
 			f = dirlist.pop()
-			eachrepo = self.currdir+f
+			eachrepo = self.userdir+self.currd+'/'+f
 			inforead = eachrepo+"/README.md"
+			#print eachrepo
 			try:
 				fl = open(inforead, 'r')
 				#print f
@@ -223,11 +225,26 @@ class searchrepos(repodepot):
 			return self.chunkthrough(dirlist)
 
 	def walk_dirs(self):
-		if len(self.dirs) == 0:
-			return self.zresult
+		#print self.dirs
+		if len(self.dirs) < 2:
+			if self.zresult != []:
+				return self.zresult
 		else:
 			self.currd = self.dirs.pop()
-			self.currdir=self.userdir+self.currd+'/'
-			dirlist = os.listdir(self.currdir)
+			curr = self.userdir+self.currd+'/'
+			dirlist = os.listdir(curr)
 			self.chunkthrough(dirlist)
 			return self.walk_dirs()
+
+	def showsearch(self,a):
+		s = ''
+		l = {'learn':[],'local':[],'work':[],'fun':[]}
+		for o in a:
+			for k,v in o.iteritems():
+				l[v].append(k)
+		for k,v in l.iteritems():
+			s += k+"\n"
+			for i in v:
+				s += i[:70]+"...\n"
+			s += "\n"
+		return s

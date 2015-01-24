@@ -10,6 +10,5 @@ uninstall:
 	rm /etc/orgit/config.ini
 
 upgrade: uninstall install
-upgrade: uninstall install
 
 	

@@ -90,8 +90,11 @@ elif args.action == 'backup':
 
 ## Searches through the name of the repo as well as the README.md first line (title) and third line (description) 	
 elif args.action == 'search':
+	o = []
 	research = repotdepot.searchrepos(args.item)
-	print pprint.pprint(research.walk_dirs())
+	if research.walk_dirs() != None:
+		o = research.walk_dirs()
+	print research.showsearch(o)
 else:
 	print "Not something i'm going to do."
 

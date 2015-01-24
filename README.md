@@ -5,8 +5,9 @@ This is a little tool I built to create and organize my code and daily life in a
 ## Install
 
 ```
-git clone orgit
+git clone http://github.com/kf4jas/orgit
 cd orgit
+./configure 
 sudo make install
 ```
 
