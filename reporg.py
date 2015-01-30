@@ -23,7 +23,7 @@ import repotdepot, sys
 
 __author__ = 'Joseph Siwiak'
 
-parser = argparse.ArgumentParser(description='This is a demo script Joe. It grabs the weather for any location.')
+parser = argparse.ArgumentParser(description='This is a demo script Joe.')
 parser.add_argument('action', action="store",help='install, setup, create, promote, backup, learn, search')
 parser.add_argument('item', action="store", help='repo_dir, backup_mount, search_string')
 parser.add_argument('-d','--debug', action='store_true', help='Debug the shit',required=False)
@@ -31,7 +31,6 @@ parser.add_argument('-c','--client', nargs=1, help='Client Folder in the Work Fo
 parser.add_argument('-p','--ppath', nargs=1, help='Change the which folder the system gets promoted to (work, learn, fun) default: local',required=False)
 
 args = parser.parse_args()
-
 
 ## Remove trailing '/' from directory if there
 if args.item[::-1][0] == '/':
@@ -73,7 +72,7 @@ elif args.action == 'promote':
 				print f
 			client = raw_input("Which Client folder? ")
 		else:
-			client = args.client
+			client = args.client[0]
 		clientdir = workingdir+"/"+client
 		if not os.path.exists(clientdir):
 			os.makedirs(clientdir)
