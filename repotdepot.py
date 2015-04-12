@@ -127,25 +127,27 @@ class depotcrtl(repodepot):
 		if not os.path.exists(self.repodir):
 			# I could put a mount specific store per thingy
 			self.encmountctrl('mount')
-		if os.path.exists(research) and os.path.exists(self.repodir):
-			os.makedirs(remote)
-			os.chdir(remote)
-			git("init", '--bare')
-			os.chdir(local)
-			git("clone", remote)
-			os.chdir(newlocal)	
-			for f in os.listdir(research):
-				shutil.move(research+"/"+f,newlocal) 
-			git("add", '.')
-			git("commit", "-m", '"First load from Research Directory"')
-			print reponame,"promoted"
-			self.jchown(newlocal,1000,1000)
-			shutil.rmtree(research)
-			print reponame,"Rsch repo deleted"
-			self.encmountctrl('umount')
-		else:
-			print "Can't Promote, probly not mounted"
-			sys.exit(1)
+		if not os.path.exists(research):
+			print "rsch path not found, check spelling"
+			sys.exit(0)
+		if not os.path.exists(self.repodir):
+			print "Repo dir not found, check mounting"
+			sys.exit(0)
+		os.makedirs(remote)
+		os.chdir(remote)
+		git("init", '--bare')
+		os.chdir(local)
+		git("clone", remote)
+		os.chdir(newlocal)	
+		for f in os.listdir(research):
+			shutil.move(research+"/"+f,newlocal) 
+		git("add", '.')
+		git("commit", "-m", '"First load from Research Directory"')
+		print reponame,"promoted"
+		self.jchown(newlocal,1000,1000)
+		shutil.rmtree(research)
+		print reponame,"Rsch repo deleted"
+		self.encmountctrl('umount')
 			
 	def storefile(self,filename):
 		os.chdir(self.startingdir)
@@ -182,12 +184,12 @@ class depotcrtl(repodepot):
 				for l in dirs:
 					w = u+"/"+l
 					os.chdir(w)
-					git("add", '.')
 					try:
+						git("add", ".")
 						git("commit", "-a")
+						git("push","origin","master")
 					except:
 						print "nothing to commit"
-					git("push","origin", "master")
 			self.encmountctrl('umount')
 		else:
 			print "done"

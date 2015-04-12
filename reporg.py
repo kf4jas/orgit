@@ -35,8 +35,6 @@ args = parser.parse_args()
 ## Remove trailing '/' from directory if there
 if args.item[::-1][0] == '/':
 	args.item = args.item[:-1]
-	#print args.item
-
 
 ## Sets up the folders to either your user directory or a defined one later. 
 if args.action == 'setup':
@@ -82,6 +80,7 @@ elif args.action == 'promote':
 		research.promote(args.item,"learn")
 	else:
 		print args.ppath,"does not exist"
+
 ## Runs Backup procedure based on the promoted folder (local, work, w.e.)
 elif args.action == 'backup':
 	research = repotdepot.depotcrtl('rsch')
@@ -94,8 +93,9 @@ elif args.action == 'search':
 	if research.walk_dirs() != None:
 		o = research.walk_dirs()
 	print research.showsearch(o)
+## Memo per repo. if it doesn't exist, create it. If it does, dsource into it. and let the bin do it. 
+## Memo per repo. if it doesn't exist, create it. If it does, dsource into it. and let the bin do it. 
+elif args.action == 'memo':
+	print "hey asshole. do the memo part of this code"
 else:
 	print "Not something i'm going to do."
-
-
-
